@@ -1,235 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude로 앱 만들기 — 초보자 여정</title>
 
+<meta name="description" content="코딩 몰라도 됩니다. Claude에게 말하면 앱이 만들어집니다. 기획부터 배포까지 5단계로 쉽게 이해해보세요.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Claude로 앱 만들기 — 초보자 여정">
+<meta property="og:description" content="코딩 몰라도 됩니다. Claude에게 말하면 앱이 만들어집니다. 기획부터 배포까지 5단계로 쉽게 이해해보세요.">
+<meta property="og:image" content="https://coding-flow.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ko_KR">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude로 앱 만들기 — 초보자 여정">
+<meta name="twitter:description" content="코딩 몰라도 됩니다. Claude에게 말하면 앱이 만들어집니다.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-.scene{padding:1.5rem 0;font-family:var(--font-sans,sans-serif)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f8f6;color:#1a1a1a;min-height:100vh;padding:2rem 1.2rem;font-size:18px}
+.page{max-width:620px;margin:0 auto}
+h1{font-size:26px;font-weight:600;margin-bottom:6px;color:#1a1a1a}
+.subtitle{font-size:17px;color:#888;margin-bottom:2rem}
 .journey{display:flex;flex-direction:column;gap:0}
 .step-row{display:flex;align-items:stretch;gap:0}
-.step-left{width:110px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:0}
-.step-circle{width:56px;height:56px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:2px solid transparent;transition:transform .15s,border-color .15s;flex-shrink:0}
+.step-left{width:88px;flex-shrink:0;display:flex;flex-direction:column;align-items:center}
+.step-circle{width:62px;height:62px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:2px solid transparent;transition:transform .15s,border-color .15s;flex-shrink:0;user-select:none}
 .step-circle:hover{transform:scale(1.08)}
-.step-circle.active{border-color:var(--color-border-primary)}
-.step-icon{font-size:22px;line-height:1}
-.step-num{font-size:10px;font-weight:500;margin-top:2px}
-.step-vline{width:2px;flex:1;min-height:16px;background:var(--color-border-tertiary)}
-.step-right{flex:1;padding:0 0 20px 8px;display:flex;flex-direction:column;justify-content:center}
-.step-title{font-size:15px;font-weight:500;color:var(--color-text-primary);cursor:pointer;padding:12px 0 4px}
-.step-title:hover{color:var(--color-text-info)}
-.step-hint{font-size:12px;color:var(--color-text-tertiary);padding-bottom:8px}
-.chips{display:flex;gap:6px;flex-wrap:wrap;padding-bottom:4px}
-.chip{font-size:11px;padding:3px 10px;border-radius:20px;border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);cursor:pointer;background:var(--color-background-secondary);transition:all .12s}
-.chip:hover,.chip.on{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
-.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.1rem;margin-top:6px;animation:pop .18s ease}
+.step-circle.active{border-color:#555}
+.step-icon{font-size:26px;line-height:1}
+.step-num{font-size:12px;font-weight:600;margin-top:3px;color:#888}
+.step-vline{width:2px;flex:1;min-height:16px;background:#e0e0d8}
+.step-right{flex:1;padding:0 0 24px 12px;display:flex;flex-direction:column;justify-content:flex-start}
+.step-title{font-size:20px;font-weight:600;color:#1a1a1a;padding:14px 0 4px;cursor:pointer}
+.step-hint{font-size:15px;color:#aaa;padding-bottom:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:4px}
+.chip{font-size:14px;padding:7px 15px;border-radius:20px;border:1px solid #ddd;color:#666;cursor:pointer;background:#fff;transition:all .12s;user-select:none}
+.chip:hover{border-color:#999;color:#333}
+.chip.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.card{background:#fff;border:1px solid #e8e8e4;border-radius:14px;padding:1.2rem 1.3rem;margin-top:10px;animation:pop .18s ease}
 @keyframes pop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.card-head{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
-.card-body{font-size:13px;color:var(--color-text-secondary);line-height:1.7}
-.card-analogy{font-size:12px;color:var(--color-text-tertiary);margin-top:8px;padding:8px 10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);line-height:1.6}
-.ask-btn{margin-top:10px;font-size:12px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--color-border-info);color:var(--color-text-info);background:transparent;cursor:pointer}
-.ask-btn:hover{background:var(--color-background-info)}
+.card-head{font-size:17px;font-weight:600;color:#1a1a1a;margin-bottom:9px}
+.card-body{font-size:16px;color:#555;line-height:1.8}
+.card-analogy{font-size:15px;color:#888;margin-top:12px;padding:10px 13px;background:#f8f8f6;border-radius:8px;line-height:1.7}
 </style>
-
-<div class="scene">
-<div class="journey" id="journey"></div>
+</head>
+<body>
+<div class="page">
+  <h1>Claude로 앱 만들기</h1>
+  <p class="subtitle">코딩 몰라도 됩니다 — 궁금한 부분을 클릭해보세요</p>
+  <div class="journey" id="journey"></div>
 </div>
-
 <script>
-const STEPS = [
-  {
-    icon:"💬", num:"1단계", title:"Claude에게 말한다",
-    hint:"코딩 몰라도 됩니다",
-    color:"#E6F1FB",
-    chips:[
-      {id:"chat", label:"채팅으로 요청"},
-      {id:"prompt", label:"프롬프트란?"},
-      {id:"nocode", label:"코드 없이 가능?"},
-    ],
-    cards:{
-      chat:{
-        head:"그냥 말하듯이 적으면 됩니다",
-        body:"'환자 목록을 보여주는 웹페이지 만들어줘'라고 적으면 Claude가 코드를 만들어 줍니다. 마치 개발자 친구에게 부탁하는 것처럼요.",
-        analogy:"📌 비유 — 요리를 못해도 '제육볶음 레시피 알려줘'라고 물어볼 수 있잖아요. Claude에게 코드를 요청하는 것도 똑같습니다."
-      },
-      prompt:{
-        head:"프롬프트 = 나의 지시문",
-        body:"Claude에게 하는 말 한 마디 한 마디가 '프롬프트'입니다. 구체적일수록 더 좋은 결과가 나옵니다. '파란 버튼에 환자 이름 클릭하면 상세 페이지로 이동하게 해줘'처럼요.",
-        analogy:"📌 비유 — 택시에서 '강남이요' 보다 '강남역 2번 출구'가 정확하게 가는 것과 같습니다."
-      },
-      nocode:{
-        head:"네, 코드 없이도 됩니다",
-        body:"Claude가 코드를 대신 써줍니다. 오류가 생겨도 오류 메시지를 복붙해서 '이 오류 고쳐줘'라고 하면 됩니다. 직접 코드를 이해하지 않아도 괜찮습니다.",
-        analogy:"📌 비유 — 자동차 구조 몰라도 운전할 수 있는 것처럼, 코드 몰라도 Claude와 함께 앱을 만들 수 있습니다."
-      }
-    }
+const STEPS=[
+  {icon:"💬",num:"1단계",title:"Claude에게 말한다",hint:"코딩 몰라도 됩니다",color:"#E6F1FB",
+   chips:[{id:"chat",label:"채팅으로 요청"},{id:"prompt",label:"프롬프트란?"},{id:"nocode",label:"코드 없이 가능?"}],
+   cards:{
+     chat:{head:"그냥 말하듯이 적으면 됩니다",body:"'환자 목록을 보여주는 웹페이지 만들어줘'라고 적으면 Claude가 코드를 만들어 줍니다. 마치 개발자 친구에게 부탁하는 것처럼요.",analogy:"📌 비유 — 요리를 못해도 '제육볶음 레시피 알려줘'라고 물어볼 수 있잖아요. Claude에게 코드를 요청하는 것도 똑같습니다."},
+     prompt:{head:"프롬프트 = 나의 지시문",body:"Claude에게 하는 말 한 마디 한 마디가 '프롬프트'입니다. 구체적일수록 더 좋은 결과가 나옵니다. '파란 버튼에 환자 이름 클릭하면 상세 페이지로 이동하게 해줘'처럼요.",analogy:"📌 비유 — 택시에서 '강남이요' 보다 '강남역 2번 출구'가 정확하게 가는 것과 같습니다."},
+     nocode:{head:"네, 코드 없이도 됩니다",body:"Claude가 코드를 대신 써줍니다. 오류가 생겨도 오류 메시지를 복붙해서 '이 오류 고쳐줘'라고 하면 됩니다. 직접 코드를 이해하지 않아도 괜찮습니다.",analogy:"📌 비유 — 자동차 구조 몰라도 운전할 수 있는 것처럼, 코드 몰라도 Claude와 함께 앱을 만들 수 있습니다."}
+   }
   },
-  {
-    icon:"🗄️", num:"2단계", title:"데이터를 저장한다",
-    hint:"Supabase = 인터넷 엑셀",
-    color:"#EAF3DE",
-    chips:[
-      {id:"db", label:"데이터베이스란?"},
-      {id:"supabase", label:"Supabase"},
-      {id:"sql", label:"SQL이란?"},
-    ],
-    cards:{
-      db:{
-        head:"데이터베이스 = 정보 창고",
-        body:"환자 이름, 진료 기록, 방문 날짜… 이런 정보를 어딘가 저장해야 앱이 작동합니다. 데이터베이스는 그 '저장소'입니다. 엑셀 표처럼 행과 열로 정보를 담습니다.",
-        analogy:"📌 비유 — 병원 서랍장 안의 환자 카드 묶음. 데이터베이스는 그걸 디지털로 만든 것입니다."
-      },
-      supabase:{
-        head:"Supabase — 설치 없이 쓰는 DB",
-        body:"데이터베이스를 직접 서버에 설치하려면 매우 복잡합니다. Supabase는 이미 만들어진 데이터베이스를 웹에서 바로 쓸 수 있게 해주는 서비스입니다. 회원가입만 하면 됩니다.",
-        analogy:"📌 비유 — 엑셀을 내 컴퓨터에 설치하는 대신, 구글 스프레드시트를 바로 쓰는 것과 같습니다."
-      },
-      sql:{
-        head:"SQL = 데이터에게 말하는 언어",
-        body:"데이터베이스에 '65세 이상 환자 보여줘', '오늘 방문자 수 세어줘'라고 요청하는 언어입니다. Claude에게 원하는 걸 설명하면 SQL도 대신 써줍니다.",
-        analogy:"📌 비유 — 도서관 사서에게 '2020년 이후 출판된 의학책 찾아줘'라고 말하는 것. SQL은 그 말을 컴퓨터가 알아듣는 형식으로 바꾼 것입니다."
-      }
-    }
+  {icon:"🗄️",num:"2단계",title:"데이터를 저장한다",hint:"Supabase = 인터넷 엑셀",color:"#EAF3DE",
+   chips:[{id:"db",label:"데이터베이스란?"},{id:"supabase",label:"Supabase"},{id:"sql",label:"SQL이란?"}],
+   cards:{
+     db:{head:"데이터베이스 = 정보 창고",body:"환자 이름, 진료 기록, 방문 날짜… 이런 정보를 어딘가 저장해야 앱이 작동합니다. 데이터베이스는 그 '저장소'입니다. 엑셀 표처럼 행과 열로 정보를 담습니다.",analogy:"📌 비유 — 병원 서랍장 안의 환자 카드 묶음. 데이터베이스는 그걸 디지털로 만든 것입니다."},
+     supabase:{head:"Supabase — 설치 없이 쓰는 DB",body:"데이터베이스를 직접 서버에 설치하려면 매우 복잡합니다. Supabase는 이미 만들어진 데이터베이스를 웹에서 바로 쓸 수 있게 해주는 서비스입니다. 회원가입만 하면 됩니다.",analogy:"📌 비유 — 엑셀을 내 컴퓨터에 설치하는 대신, 구글 스프레드시트를 바로 쓰는 것과 같습니다."},
+     sql:{head:"SQL = 데이터에게 말하는 언어",body:"데이터베이스에 '65세 이상 환자 보여줘', '오늘 방문자 수 세어줘'라고 요청하는 언어입니다. Claude에게 원하는 걸 설명하면 SQL도 대신 써줍니다.",analogy:"📌 비유 — 도서관 사서에게 '2020년 이후 출판된 의학책 찾아줘'라고 말하는 것. SQL은 그 말을 컴퓨터가 알아듣는 형식으로 바꾼 것입니다."}
+   }
   },
-  {
-    icon:"🐙", num:"3단계", title:"코드를 안전하게 보관한다",
-    hint:"GitHub = 코드 구글드라이브",
-    color:"#F1EFE8",
-    chips:[
-      {id:"github", label:"GitHub란?"},
-      {id:"save", label:"왜 저장해야 하나?"},
-    ],
-    cards:{
-      github:{
-        head:"GitHub — 코드 저장 + 이력 관리",
-        body:"Claude가 만들어준 코드를 GitHub에 올려두면 언제든 꺼내쓸 수 있고, 변경 이력이 모두 기록됩니다. 실수로 망가뜨려도 이전 버전으로 되돌릴 수 있습니다.",
-        analogy:"📌 비유 — 구글 드라이브에 문서를 저장해두면 '3일 전 버전'으로 되돌릴 수 있잖아요. GitHub는 코드를 위한 그런 서비스입니다."
-      },
-      save:{
-        head:"저장을 안 하면 어떻게 될까요?",
-        body:"Claude와의 대화창을 닫으면 코드가 사라집니다. GitHub에 저장해두면 어디서든, 누구와도 코드를 공유하고 이어서 작업할 수 있습니다. 팀으로 작업할 때 특히 중요합니다.",
-        analogy:"📌 비유 — 중요한 문서를 저장 안 하고 컴퓨터 끄는 것과 같습니다. 항상 저장해두세요."
-      }
-    }
+  {icon:"🐙",num:"3단계",title:"코드를 안전하게 보관한다",hint:"GitHub = 코드 구글드라이브",color:"#F1EFE8",
+   chips:[{id:"github",label:"GitHub란?"},{id:"save",label:"왜 저장해야 하나?"}],
+   cards:{
+     github:{head:"GitHub — 코드 저장 + 이력 관리",body:"Claude가 만들어준 코드를 GitHub에 올려두면 언제든 꺼내쓸 수 있고, 변경 이력이 모두 기록됩니다. 실수로 망가뜨려도 이전 버전으로 되돌릴 수 있습니다.",analogy:"📌 비유 — 구글 드라이브에 문서를 저장해두면 '3일 전 버전'으로 되돌릴 수 있잖아요. GitHub는 코드를 위한 그런 서비스입니다."},
+     save:{head:"저장을 안 하면 어떻게 될까요?",body:"Claude와의 대화창을 닫으면 코드가 사라집니다. GitHub에 저장해두면 어디서든, 누구와도 코드를 공유하고 이어서 작업할 수 있습니다.",analogy:"📌 비유 — 중요한 문서를 저장 안 하고 컴퓨터 끄는 것과 같습니다. 항상 저장해두세요."}
+   }
   },
-  {
-    icon:"▲", num:"4단계", title:"인터넷에 올린다 (배포)",
-    hint:"Vercel = 자동 출판사",
-    color:"#EEEDFE",
-    chips:[
-      {id:"vercel", label:"Vercel이란?"},
-      {id:"deploy", label:"배포가 뭔가요?"},
-      {id:"domain", label:"주소(도메인)"},
-    ],
-    cards:{
-      vercel:{
-        head:"Vercel — 클릭 몇 번으로 사이트 오픈",
-        body:"GitHub에 코드를 올리면 Vercel이 자동으로 인터넷에 공개 사이트를 만들어 줍니다. 서버 구입, 복잡한 설정 전혀 없이 1~2분 만에 완료됩니다.",
-        analogy:"📌 비유 — 원고를 출판사에 보내면 책으로 만들어 서점에 올려주는 것처럼, Vercel은 코드를 받아서 사이트로 만들어 인터넷에 올려줍니다."
-      },
-      deploy:{
-        head:"배포 = 세상에 공개하는 것",
-        body:"내 컴퓨터에서만 보이던 것을 다른 사람도 볼 수 있게 인터넷에 올리는 과정입니다. 배포 후에는 스마트폰으로도 접속이 됩니다.",
-        analogy:"📌 비유 — 일기장에 글을 쓰는 건 나만 보는 것(개발 중). 그걸 블로그에 올리면 모두가 볼 수 있는 것(배포)."
-      },
-      domain:{
-        head:"도메인 = 사이트 주소",
-        body:"Vercel이 기본 주소를 자동으로 만들어줍니다(myapp.vercel.app). 기억하기 쉬운 주소(myhospital.kr)를 원하면 연 1~3만원에 구입해서 연결할 수 있습니다.",
-        analogy:"📌 비유 — 건물 주소 같은 것입니다. 기본 주소도 쓸 수 있지만, 간판처럼 예쁜 이름을 달고 싶으면 따로 구입합니다."
-      }
-    }
+  {icon:"▲",num:"4단계",title:"인터넷에 올린다 (배포)",hint:"Vercel = 자동 출판사",color:"#EEEDFE",
+   chips:[{id:"vercel",label:"Vercel이란?"},{id:"deploy",label:"배포가 뭔가요?"},{id:"domain",label:"주소(도메인)"}],
+   cards:{
+     vercel:{head:"Vercel — 클릭 몇 번으로 사이트 오픈",body:"GitHub에 코드를 올리면 Vercel이 자동으로 인터넷에 공개 사이트를 만들어 줍니다. 서버 구입, 복잡한 설정 전혀 없이 1~2분 만에 완료됩니다.",analogy:"📌 비유 — 원고를 출판사에 보내면 책으로 만들어 서점에 올려주는 것처럼, Vercel은 코드를 받아서 사이트로 만들어 인터넷에 올려줍니다."},
+     deploy:{head:"배포 = 세상에 공개하는 것",body:"내 컴퓨터에서만 보이던 것을 다른 사람도 볼 수 있게 인터넷에 올리는 과정입니다. 배포 후에는 스마트폰으로도 접속이 됩니다.",analogy:"📌 비유 — 일기장에 글을 쓰는 건 나만 보는 것(개발 중). 그걸 블로그에 올리면 모두가 볼 수 있는 것(배포)."},
+     domain:{head:"도메인 = 사이트 주소",body:"Vercel이 기본 주소를 자동으로 만들어줍니다(myapp.vercel.app). 기억하기 쉬운 주소(myhospital.kr)를 원하면 연 1~3만원에 구입해서 연결할 수 있습니다.",analogy:"📌 비유 — 건물 주소 같은 것입니다. 기본 주소도 쓸 수 있지만, 간판처럼 예쁜 이름을 달고 싶으면 따로 구입합니다."}
+   }
   },
-  {
-    icon:"🔄", num:"계속", title:"쓰면서 계속 고쳐나간다",
-    hint:"완성이 아니라 성장",
-    color:"#E1F5EE",
-    chips:[
-      {id:"iterate", label:"어떻게 개선하나요?"},
-      {id:"fear", label:"망가지면 어떡하죠?"},
-    ],
-    cards:{
-      iterate:{
-        head:"불편한 점 → Claude에게 → 다시 배포",
-        body:"사용하다가 불편한 점이 생기면 Claude에게 '이 버튼이 너무 작아서 어르신들이 누르기 힘들다고 하는데 크게 해줘'라고 하면 됩니다. 이 사이클을 반복하면서 점점 좋아집니다.",
-        analogy:"📌 비유 — 식당도 처음 오픈하고 나서 손님 반응 보며 메뉴를 다듬잖아요. 앱도 똑같습니다."
-      },
-      fear:{
-        head:"망가져도 되돌릴 수 있습니다",
-        body:"GitHub에 저장해 두었기 때문에 언제든 이전 버전으로 되돌릴 수 있습니다. 마음 놓고 수정해도 됩니다. Claude에게 '전에 작동하던 버전으로 되돌려줘'라고 하면 도움을 받을 수도 있습니다.",
-        analogy:"📌 비유 — 문서 편집에서 Ctrl+Z(되돌리기)가 있는 것처럼, GitHub도 코드의 되돌리기 기능이 있습니다."
-      }
-    }
+  {icon:"🔄",num:"계속",title:"쓰면서 계속 고쳐나간다",hint:"완성이 아니라 성장",color:"#E1F5EE",
+   chips:[{id:"iterate",label:"어떻게 개선하나요?"},{id:"fear",label:"망가지면 어떡하죠?"}],
+   cards:{
+     iterate:{head:"불편한 점 → Claude에게 → 다시 배포",body:"사용하다가 불편한 점이 생기면 Claude에게 '이 버튼이 너무 작아서 어르신들이 누르기 힘들다고 하는데 크게 해줘'라고 하면 됩니다. 이 사이클을 반복하면서 점점 좋아집니다.",analogy:"📌 비유 — 식당도 처음 오픈하고 나서 손님 반응 보며 메뉴를 다듬잖아요. 앱도 똑같습니다."},
+     fear:{head:"망가져도 되돌릴 수 있습니다",body:"GitHub에 저장해 두었기 때문에 언제든 이전 버전으로 되돌릴 수 있습니다. 마음 놓고 수정해도 됩니다.",analogy:"📌 비유 — 문서 편집에서 Ctrl+Z(되돌리기)가 있는 것처럼, GitHub도 코드의 되돌리기 기능이 있습니다."}
+   }
   }
 ];
 
-let openChip = null;
-
+let openChip=null;
 function build(){
-  const j = document.getElementById('journey');
-  j.innerHTML = '';
-  STEPS.forEach((step, si) => {
-    const row = document.createElement('div');
-    row.className = 'step-row';
-    const left = document.createElement('div');
-    left.className = 'step-left';
-    const circle = document.createElement('div');
-    circle.className = 'step-circle';
-    circle.id = 'circ-'+si;
-    circle.style.background = step.color;
-    circle.innerHTML = `<span class="step-icon" style="font-size:22px">${step.icon}</span><span class="step-num" style="font-size:10px;font-weight:500;color:var(--color-text-secondary)">${step.num}</span>`;
+  const j=document.getElementById('journey');
+  j.innerHTML='';
+  STEPS.forEach((step,si)=>{
+    const row=document.createElement('div');row.className='step-row';
+    const left=document.createElement('div');left.className='step-left';
+    const circle=document.createElement('div');
+    circle.className='step-circle';circle.id='circ-'+si;
+    circle.style.background=step.color;
+    circle.innerHTML=`<span class="step-icon">${step.icon}</span><span class="step-num">${step.num}</span>`;
     left.appendChild(circle);
-    if(si < STEPS.length-1){
-      const vline = document.createElement('div');
-      vline.className = 'step-vline';
-      left.appendChild(vline);
-    }
-    const right = document.createElement('div');
-    right.className = 'step-right';
-    const titleEl = document.createElement('div');
-    titleEl.className = 'step-title';
-    titleEl.textContent = step.title;
-    const hintEl = document.createElement('div');
-    hintEl.className = 'step-hint';
-    hintEl.textContent = step.hint;
-    const chipsEl = document.createElement('div');
-    chipsEl.className = 'chips';
-    step.chips.forEach(ch => {
-      const chip = document.createElement('span');
-      chip.className = 'chip';
-      chip.id = 'chip-'+si+'-'+ch.id;
-      chip.textContent = ch.label;
-      chip.onclick = () => toggleCard(si, ch.id, step.cards[ch.id]);
-      chipsEl.appendChild(chip);
+    if(si<STEPS.length-1){const vl=document.createElement('div');vl.className='step-vline';left.appendChild(vl);}
+    const right=document.createElement('div');right.className='step-right';
+    right.innerHTML=`<div class="step-title">${step.title}</div><div class="step-hint">${step.hint}</div>`;
+    const chips=document.createElement('div');chips.className='chips';
+    step.chips.forEach(ch=>{
+      const c=document.createElement('span');c.className='chip';c.id='chip-'+si+'-'+ch.id;c.textContent=ch.label;
+      c.onclick=()=>toggleCard(si,ch.id,step.cards[ch.id]);chips.appendChild(c);
     });
-    right.appendChild(titleEl);
-    right.appendChild(hintEl);
-    right.appendChild(chipsEl);
-    const cardArea = document.createElement('div');
-    cardArea.id = 'cardarea-'+si;
-    right.appendChild(cardArea);
-    row.appendChild(left);
-    row.appendChild(right);
-    j.appendChild(row);
+    right.appendChild(chips);
+    const area=document.createElement('div');area.id='cardarea-'+si;right.appendChild(area);
+    row.appendChild(left);row.appendChild(right);j.appendChild(row);
   });
 }
-
-function toggleCard(si, chipId, data){
-  const key = si+'-'+chipId;
-  const area = document.getElementById('cardarea-'+si);
-  const chipEl = document.getElementById('chip-'+si+'-'+chipId);
-  if(openChip === key){
-    openChip = null;
-    area.innerHTML = '';
+function toggleCard(si,chipId,data){
+  const key=si+'-'+chipId;
+  const area=document.getElementById('cardarea-'+si);
+  const chipEl=document.getElementById('chip-'+si+'-'+chipId);
+  if(openChip===key){
+    openChip=null;area.innerHTML='';
     document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
     document.querySelectorAll('.step-circle').forEach(c=>c.classList.remove('active'));
     return;
   }
   document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
   document.querySelectorAll('.step-circle').forEach(c=>c.classList.remove('active'));
-  openChip = key;
-  chipEl.classList.add('on');
+  openChip=key;chipEl.classList.add('on');
   document.getElementById('circ-'+si).classList.add('active');
-  STEPS.forEach((_,i)=>{
-    if(i!==si) document.getElementById('cardarea-'+i).innerHTML='';
-  });
-  area.innerHTML = `<div class="card"><div class="card-head">${data.head}</div><div class="card-body">${data.body}</div><div class="card-analogy">${data.analogy}</div></div>`;
+  STEPS.forEach((_,i)=>{if(i!==si)document.getElementById('cardarea-'+i).innerHTML='';});
+  area.innerHTML=`<div class="card"><div class="card-head">${data.head}</div><div class="card-body">${data.body}</div><div class="card-analogy">${data.analogy}</div></div>`;
 }
-
 build();
 </script>
+</body>
+</html>
